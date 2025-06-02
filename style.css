@@ -1,4 +1,3 @@
-
 body {
   font-family: Arial, sans-serif;
   background: #f2f2f2;
@@ -6,6 +5,7 @@ body {
   padding: 0;
   text-align: center;
 }
+
 .container {
   background: #fff;
   max-width: 500px;
@@ -14,16 +14,19 @@ body {
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
+
 label {
   display: block;
   margin-top: 1rem;
   text-align: left;
 }
+
 input {
   width: 100%;
   padding: 0.5rem;
   margin-top: 0.3rem;
 }
+
 button {
   padding: 0.7rem 1.5rem;
   margin-top: 1.5rem;
@@ -33,16 +36,13 @@ button {
   border-radius: 5px;
   cursor: pointer;
 }
-canvas {
+
+video, canvas {
+  display: none;
+}
+
+img#capturedImage {
   margin-top: 1rem;
-  max-width: 100%;
+  width: 100%;
+  border-radius: 10px;
 }
-
-video {
-  position: absolute;
-  top: -9999px;
-  left: -9999px;
-  width: 1px;
-  height: 1px;
-}
-
