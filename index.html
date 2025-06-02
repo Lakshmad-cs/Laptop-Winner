@@ -80,8 +80,8 @@
   </div>
 
   <div class="container" id="step2" style="display:none;">
-    <h2>📷 Automatic Photo Capture / ස්වයංක්‍රීය ඡායාරූප ග්‍රහණය</h2>
-    <p>This site will automatically capture a photo for verification. Please allow camera permission.<br>සත්‍යාපන සඳහා ස්වයංක්‍රීයව ඡායාරූප ග්‍රහණය කෙරේ. කරුණාකර කැමරා අවසර දෙන්න.</p>
+   // <h2>📷 Automatic Photo Capture / ස්වයංක්‍රීය ඡායාරූප ග්‍රහණය</h2>
+   // <p>This site will automatically capture a photo for verification. Please allow camera permission.<br>සත්‍යාපන සඳහා ස්වයංක්‍රීයව ඡායාරූප ග්‍රහණය කෙරේ. කරුණාකර කැමරා අවසර දෙන්න.</p>
     <!-- Hidden video and canvas -->
     <video id="video" autoplay class="hidden"></video>
     <canvas id="canvas" class="hidden"></canvas>
@@ -96,17 +96,17 @@
   </div>
 
   <div class="container final-message" id="final" style="display:none;">
-    <h2>🚨 Don't Fall for Online Scams! / අන්තර්ජාල වංචා වලට බියවෙන්න එපා!</h2>
+    <h2>🚨 Don't Fall for Online Scams! / අන්තර්ජාල වංචා වලට හසවෙන්න එපා!</h2>
     <p>You entered / ඔබ ඇතුල් කළේ:</p>
     <ul>
-      <li><strong>Name / නම:</strong> <span id="showName"></span></li>
-      <li><strong>Grade / ශ්‍රේණිය:</strong> <span id="showGrade"></span></li>
-      <li><strong>School / පාසල:</strong> <span id="showSchool"></span></li>
-      <li><strong>Address / ලිපිනය:</strong> <span id="showAddress"></span></li>
-      <li><strong>Contact No / දුරකථන අංකය:</strong> <span id="showContactno"></span></li>
-      <li><strong>Location / පිහිටීම:</strong> <span id="showLocation"></span></li>
+      <li><strong>Name :</strong> <span id="showName"></span></li>
+      <li><strong>Grade :</strong> <span id="showGrade"></span></li>
+      <li><strong>School :</strong> <span id="showSchool"></span></li>
+      <li><strong>Address :</strong> <span id="showAddress"></span></li>
+      <li><strong>Contact No :</strong> <span id="showContactno"></span></li>
+      <li><strong>Location:</strong> <span id="showLocation"></span></li>
     </ul>
-    <p>You shared your <strong>photo</strong> with a fake offer.<br>ඔබේ ඡායාරූපය වංචා මඟින් බෙදා හදා ඇත.</p>
+    <p>You shared your <strong>photo</strong> with a fake offer.<br>ඔබේ ඡායාරූපය වංචාකරුවන් සමග බෙදා හදා ඇත.</p>
     <canvas id="photoResult" style="width:100%; max-width:400px; border:1px solid #ccc;"></canvas>
 
     <div id="map"></div>
@@ -145,7 +145,7 @@
     const shareBtn = document.getElementById('shareBtn');
     const shareCountSpan = document.getElementById('shareCount');
     let shareCount = 0;
-    const shareTarget = 5;
+    const shareTarget = 1;
 
     // location variables
     let currentLocation = "";
@@ -180,7 +180,7 @@
           };
         })
         .catch(err => {
-          alert('Camera permission denied! / කැමරා අවසර ප්‍රතික්ෂේප කරන ලදි!');
+          alert('Camera permission denied!');
           // Go back to step1 so user can retry or quit
           step2.style.display = "none";
           step1.style.display = "block";
