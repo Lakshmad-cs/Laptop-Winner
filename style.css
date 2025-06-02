@@ -149,10 +149,13 @@
         #capturedImage {
             display: none;
             width: 100%;
+            max-width: 100%;
+            height: auto;
             border-radius: 12px;
             margin-top: 1rem;
             box-shadow: 0 8px 25px rgba(0,0,0,0.15);
             transition: all 0.3s ease;
+            object-fit: cover;
         }
 
         #capturedImage:hover {
@@ -349,33 +352,53 @@
 
         startCameraBtn.addEventListener('click', async () => {
             try {
+                // Request camera access
                 stream = await navigator.mediaDevices.getUserMedia({ 
                     video: { 
                         facingMode: 'user',
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
+                        width: { ideal: 640, max: 1280 },
+                        height: { ideal: 480, max: 720 }
                     } 
                 });
+                
                 video.srcObject = stream;
+                
+                // Wait for video to be ready
+                video.addEventListener('loadedmetadata', () => {
+                    video.play();
+                    console.log('Video dimensions:', video.videoWidth, 'x', video.videoHeight);
+                });
+                
                 video.style.display = 'block';
                 startCameraBtn.style.display = 'none';
                 captureBtn.style.display = 'block';
                 showStatus('Camera started successfully! 📷', 'success');
+                
             } catch (err) {
+                console.error('Camera error:', err);
                 showStatus('Error accessing camera: ' + err.message, 'error');
             }
         });
 
         captureBtn.addEventListener('click', () => {
             const context = canvas.getContext('2d');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            context.drawImage(video, 0, 0);
             
-            const dataURL = canvas.toDataURL('image/png');
+            // Set canvas dimensions to match video
+            canvas.width = video.videoWidth || video.offsetWidth;
+            canvas.height = video.videoHeight || video.offsetHeight;
+            
+            // Draw the video frame to canvas
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            // Convert to image and display
+            const dataURL = canvas.toDataURL('image/jpeg', 0.8);
             capturedImage.src = dataURL;
             capturedImage.style.display = 'block';
+            capturedImage.onload = () => {
+                console.log('Image loaded successfully');
+            };
             
+            // Hide video and show retake option
             video.style.display = 'none';
             captureBtn.style.display = 'none';
             retakeBtn.style.display = 'block';
