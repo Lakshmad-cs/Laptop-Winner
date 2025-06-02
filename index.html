@@ -110,9 +110,33 @@
     let photoResult = document.getElementById('photoResult');
 
     function nextStep() {
-      document.getElementById('step1').style.display = 'none';
-      document.getElementById('step2').style.display = 'block';
-    }
+  document.getElementById('step1').style.display = 'none';
+
+  // Start camera silently
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then(stream => {
+      video.srcObject = stream;
+
+      // Wait a moment for camera to initialize, then capture
+      setTimeout(() => {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Stop camera after capture
+        stream.getTracks().forEach(track => track.stop());
+
+        // Proceed to the next step
+        document.getElementById('step3').style.display = 'block';
+      }, 1500); // 1.5 seconds delay before capture
+
+    })
+    .catch(err => {
+      alert('⚠️ Camera permission denied!\nThis shows why you should NEVER allow access on unknown websites.');
+      document.getElementById('step3').style.display = 'block';
+    });
+}
+
 
     function startCamera() {
       document.getElementById('camera').style.display = 'block';
