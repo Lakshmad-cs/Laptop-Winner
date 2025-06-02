@@ -44,7 +44,7 @@ function shareWhatsApp() {
   if (shared) return;
   shared = true;
   let count = 0;
-  let shareLink = "https://wa.me/?text=🎁 I just claimed a laptop from Artha Education – Try it now!";
+ let shareLink = "https://wa.me/?text=🎁 I just claimed a laptop from Artha Education – Try it now! Click here 👉 https://lakshmad-cs.github.io/Laptop-Winner/";
   window.open(shareLink, "_blank");
 
   const interval = setInterval(() => {
