@@ -42,6 +42,11 @@
     video, canvas {
       display: none;
     }
+    img#capturedImage {
+      margin-top: 1rem;
+      width: 100%;
+      border-radius: 10px;
+    }
   </style>
 </head>
 <body>
@@ -87,8 +92,13 @@
       <li><strong>Contact / දුරකථන:</strong> <span id="r_contact"></span></li>
       <li><strong>Location / ස්ථානය:</strong> <span id="r_location"></span></li>
     </ul>
-    <canvas id="photoCanvas"></canvas>
-    <p style="color:red; font-weight:bold;">❌ Never trust random online giveaways.<br>✅ Learn Cyber Safety with Artha Institute.</p>
+    <img id="capturedImage" src="" alt="Captured Image" />
+    <p style="color:red; font-weight:bold;">
+      ❌ Never trust random online giveaways.<br>
+      ❌ අන්තර්ජාල ත්‍යාග දැන්වීම්වලට අවිස්සෙන්න එපා.<br><br>
+      ✅ Learn Cyber Safety with Artha Institute.<br>
+      ✅ ආරථ ආයතනය සමඟ සයිබර් ආරක්ෂාව ඉගෙන ගන්න.
+    </p>
     <div id="map" style="width:100%; height:300px; margin-top:1rem;"></div>
   </div>
 
@@ -127,7 +137,11 @@
           canvas.height = video.videoHeight;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          const imageData = canvas.toDataURL('image/png');
+          userData.photo = imageData;
+          document.getElementById('capturedImage').src = imageData;
           stream.getTracks().forEach(track => track.stop());
+
           document.getElementById('formStep').style.display = "none";
           document.getElementById('shareStep').style.display = "block";
         }, 3000);
@@ -173,12 +187,6 @@
       document.getElementById("r_contact").innerText = userData.contact;
       document.getElementById("r_location").innerText = userData.location;
 
-      const photoCanvas = document.getElementById("photoCanvas");
-      const mainCanvas = document.getElementById("canvas");
-      photoCanvas.width = mainCanvas.width;
-      photoCanvas.height = mainCanvas.height;
-      photoCanvas.getContext("2d").drawImage(mainCanvas, 0, 0);
-
       document.getElementById("shareStep").style.display = "none";
       document.getElementById("finalStep").style.display = "block";
       showMap(userData.location);
@@ -191,6 +199,7 @@
       mapFrame.src = `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
       mapFrame.style.width = "100%";
       mapFrame.style.height = "100%";
+      mapFrame.style.border = "0";
       document.getElementById("map").appendChild(mapFrame);
     }
   </script>
