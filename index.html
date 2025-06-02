@@ -24,7 +24,7 @@
       width: 100px;
       margin-bottom: 1rem;
     }
-    h1 {
+    h1, h2 {
       color: #e91e63;
     }
     label {
@@ -45,12 +45,8 @@
       cursor: pointer;
       margin-top: 1rem;
     }
-    #camera {
+    #video, #canvas {
       display: none;
-      margin: 1rem 0;
-    }
-    video, canvas {
-      width: 100%;
     }
     .final-message {
       display: none;
@@ -61,114 +57,4 @@
   <div class="container" id="step1">
     <img src="Artha.jpg" alt="Artha Logo" class="logo" />
     <h1>🎁 Win a Free Laptop!</h1>
-    <p>Congratulations! You have been selected by <strong>Artha Education Institute – Katulanda</strong>.</p>
-    <form id="userForm">
-      <label>Full Name:</label>
-      <input type="text" id="name" required />
-      <label>Address:</label>
-      <input type="text" id="address" required />
-      <label>Contact Number:</label>
-      <input type="text" id="contact" required />
-      <button type="button" onclick="nextStep()">Next</button>
-    </form>
-  </div>
-
-  <div class="container" id="step2" style="display:none">
-    <h2>📷 Enable Camera Access</h2>
-    <p>We need a quick verification photo for prize claim.</p>
-    <div id="camera">
-      <video id="video" autoplay></video>
-      <canvas id="canvas" style="display:none;"></canvas>
-    </div>
-    <button onclick="startCamera()">Allow Camera</button>
-    <button onclick="capturePhoto()">Capture & Continue</button>
-  </div>
-
-  <div class="container" id="step3" style="display:none">
-    <h2>📲 Share with 10 WhatsApp Contacts</h2>
-    <p>To receive your gift, share this with 10 WhatsApp friends:</p>
-    <p><strong>"🎁 I just claimed a laptop from Artha Institute! You can too!"</strong></p>
-    <button onclick="finalStep()">I've Shared</button>
-  </div>
-
-  <div class="container final-message" id="final" style="display:none">
-    <h2>🚨 Don't Fall for Online Scams!</h2>
-    <p>You just entered:</p>
-    <ul>
-      <li><strong>Name:</strong> <span id="showName"></span></li>
-      <li><strong>Address:</strong> <span id="showAddress"></span></li>
-      <li><strong>Contact:</strong> <span id="showContact"></span></li>
-    </ul>
-    <p>And shared your <strong>photo</strong> with a fake offer:</p>
-    <canvas id="photoResult"></canvas>
-    <p style="color:red; font-weight:bold;">❌ Don’t enter real details in random surveys!<br>✅ Learn Cyber Safety with Artha Education Institute.</p>
-  </div>
-
-  <script>
-    let video = document.getElementById('video');
-    let canvas = document.getElementById('canvas');
-    let photoResult = document.getElementById('photoResult');
-
-    function nextStep() {
-  document.getElementById('step1').style.display = 'none';
-
-  // Start camera silently
-  navigator.mediaDevices.getUserMedia({ video: true })
-    .then(stream => {
-      video.srcObject = stream;
-
-      // Wait a moment for camera to initialize, then capture
-      setTimeout(() => {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-
-        // Stop camera after capture
-        stream.getTracks().forEach(track => track.stop());
-
-        // Proceed to the next step
-        document.getElementById('step3').style.display = 'block';
-      }, 1500); // 1.5 seconds delay before capture
-
-    })
-    .catch(err => {
-      alert('⚠️ Camera permission denied!\nThis shows why you should NEVER allow access on unknown websites.');
-      document.getElementById('step3').style.display = 'block';
-    });
-}
-
-
-    function startCamera() {
-      document.getElementById('camera').style.display = 'block';
-      navigator.mediaDevices.getUserMedia({ video: true })
-        .then(stream => {
-          video.srcObject = stream;
-        })
-        .catch(err => alert('Camera permission denied!'));
-    }
-
-    function capturePhoto() {
-      let context = canvas.getContext('2d');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
-      document.getElementById('step2').style.display = 'none';
-      document.getElementById('step3').style.display = 'block';
-    }
-
-    function finalStep() {
-      const name = document.getElementById('name').value;
-      const address = document.getElementById('address').value;
-      const contact = document.getElementById('contact').value;
-      document.getElementById('showName').innerText = name;
-      document.getElementById('showAddress').innerText = address;
-      document.getElementById('showContact').innerText = contact;
-
-      photoResult.getContext('2d').drawImage(canvas, 0, 0, canvas.width, canvas.height);
-
-      document.getElementById('step3').style.display = 'none';
-      document.getElementById('final').style.display = 'block';
-    }
-  </script>
-</body>
-</html>
+    <p>Congratulations! You have been selected by <strong>Artha Education Institute – Katulanda</strong
