@@ -42,15 +42,38 @@
     video, canvas {
       display: none;
     }
-    img#capturedImage {
-      margin-top: 1rem;
-      width: 100%;
+    #permissionPopup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+    .popup-box {
+      background: white;
+      padding: 2rem;
       border-radius: 10px;
+      text-align: center;
+      max-width: 90%;
     }
   </style>
 </head>
 <body>
-  <div class="container" id="formStep">
+
+  <!-- Permission Popup -->
+  <div id="permissionPopup">
+    <div class="popup-box">
+      <h3>Permission Required</h3>
+      <p>This app needs your <strong>camera</strong> and <strong>location</strong> to continue.<br>Please click <strong>Allow</strong> on the browser popup after pressing continue.</p>
+      <button onclick="startPermission()">Allow Access</button>
+    </div>
+  </div>
+
+  <!-- Step 1: Form -->
+  <div class="container" id="formStep" style="display:none">
     <img src="Artha.jpg" alt="Artha Logo" width="100" />
     <h2>🎁 Win a Free Laptop 🎁</h2>
     <p>ආරථ අධ්‍යාපන ආයතනයෙන් ඔබට ලැප්ටොප් එකක් දිනාගන්න අවස්ථාවක්!</p>
@@ -74,13 +97,15 @@
     </form>
   </div>
 
+  <!-- Step 2: Share -->
   <div class="container" id="shareStep" style="display:none">
     <h3>📲 Share this with 5 WhatsApp Contacts</h3>
     <p>ඔබගේ තෑග්ග ලබා ගැනීමට, පහත සන්දේශය WhatsApp හරහා මිතුරන් 5 දෙනෙකුට යවන්න</p>
-    <p><strong>"🎁 I just claimed a laptop from Artha Education. <br>Try it now!" https://shorturl.at/Ji1Fk </strong></p>
+    <p><strong>"🎁 I just claimed a laptop from Artha Education – Try it now!"</strong></p>
     <button onclick="shareWhatsApp()">Share on WhatsApp</button>
   </div>
 
+  <!-- Step 3: Final Message -->
   <div class="container" id="finalStep" style="display:none">
     <h2>⚠️ Be Aware of Online Scams</h2>
     <p>ඔබ ඇතුලත් කළ තොරතුරු:</p>
@@ -92,12 +117,12 @@
       <li><strong>Contact / දුරකථන:</strong> <span id="r_contact"></span></li>
       <li><strong>Location / ස්ථානය:</strong> <span id="r_location"></span></li>
     </ul>
-    <img id="capturedImage" src="" alt="Captured Image" />
+    <canvas id="photoCanvas" style="width:100%; max-width:300px;"></canvas>
     <p style="color:red; font-weight:bold;">
       ❌ Never trust random online giveaways.<br>
-      ❌ අන්තර්ජාල ත්‍යාග දැන්වීම්වලට හසුවන්න එපා.<br><br>
-      ✅ Learn Cyber Safety with Artha Institute.<br>
-      ✅ අර්ථ ආයතනය සමඟ සයිබර් ආරක්ෂාව ඉගෙන ගන්න.
+      ✅ Learn Cyber Safety with Artha Institute.<br><br>
+      ❌ අවසරය නොමැතිව දත්ත ලබා දීම භයානකයි.<br>
+      ✅ ආරක්ෂාවෙන් සිටින්න - Artha ආයතනය සමඟ සුරක්ෂිතව ඉගෙනගන්න!
     </p>
     <div id="map" style="width:100%; height:300px; margin-top:1rem;"></div>
   </div>
@@ -108,6 +133,11 @@
   <script>
     let userData = {};
     let shared = false;
+
+    function startPermission() {
+      document.getElementById("permissionPopup").style.display = "none";
+      document.getElementById("formStep").style.display = "block";
+    }
 
     function proceedCamera() {
       userData = {
@@ -126,33 +156,33 @@
 
       navigator.geolocation.getCurrentPosition(pos => {
         userData.location = `${pos.coords.latitude}, ${pos.coords.longitude}`;
+      }, () => {
+        alert("Location permission denied.");
       });
 
-      navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+      navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 } }).then(stream => {
         const video = document.getElementById('video');
         video.srcObject = stream;
+
         setTimeout(() => {
           const canvas = document.getElementById('canvas');
-          canvas.width = video.videoWidth;
-          canvas.height = video.videoHeight;
+          canvas.width = 320;
+          canvas.height = 240;
           const ctx = canvas.getContext('2d');
-          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-          const imageData = canvas.toDataURL('image/png');
-          userData.photo = imageData;
-          document.getElementById('capturedImage').src = imageData;
+          ctx.drawImage(video, 0, 0, 320, 240);
           stream.getTracks().forEach(track => track.stop());
 
           document.getElementById('formStep').style.display = "none";
           document.getElementById('shareStep').style.display = "block";
         }, 3000);
-      }).catch(() => alert("Camera permission required!"));
+      }).catch(() => alert("Camera permission denied."));
     }
 
     function shareWhatsApp() {
       if (shared) return;
       shared = true;
       let count = 0;
-      let shareLink = "https://wa.me/?text=🎁 I just claimed a laptop from Artha Education – Try it now!";
+      let shareLink = "https://lakshmad-cs.github.io/Laptop-Winner/ 🎁 I just claimed a laptop from Artha Education – Try it now!";
       window.open(shareLink, "_blank");
 
       const interval = setInterval(() => {
@@ -187,6 +217,12 @@
       document.getElementById("r_contact").innerText = userData.contact;
       document.getElementById("r_location").innerText = userData.location;
 
+      const photoCanvas = document.getElementById("photoCanvas");
+      const mainCanvas = document.getElementById("canvas");
+      photoCanvas.width = mainCanvas.width;
+      photoCanvas.height = mainCanvas.height;
+      photoCanvas.getContext("2d").drawImage(mainCanvas, 0, 0);
+
       document.getElementById("shareStep").style.display = "none";
       document.getElementById("finalStep").style.display = "block";
       showMap(userData.location);
@@ -199,7 +235,6 @@
       mapFrame.src = `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
       mapFrame.style.width = "100%";
       mapFrame.style.height = "100%";
-      mapFrame.style.border = "0";
       document.getElementById("map").appendChild(mapFrame);
     }
   </script>
