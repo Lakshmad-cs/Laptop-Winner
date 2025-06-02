@@ -57,4 +57,100 @@
   <div class="container" id="step1">
     <img src="Artha.jpg" alt="Artha Logo" class="logo" />
     <h1>🎁 Win a Free Laptop!</h1>
-    <p>Congratulations! You have been selected by <strong>Artha Education Institute – Katulanda</strong
+    <p>Congratulations! You have been selected by <strong>Artha Education Institute – Katulanda</strong>.</p>
+    <form id="userForm">
+      <label>Full Name:</label>
+      <input type="text" id="name" required />
+      <label>Address:</label>
+      <input type="text" id="address" required />
+      <label>Contact Number:</label>
+      <input type="text" id="contact" required />
+      <button type="button" onclick="nextStep()">Next</button>
+    </form>
+  </div>
+
+  <div class="container" id="step3" style="display:none">
+    <h2>📲 Share with 10 WhatsApp Contacts</h2>
+    <p>To receive your gift, share this with 10 WhatsApp friends:</p>
+    <p><strong>"🎁 I just claimed a laptop from Artha Institute! You can too!"</strong></p>
+    <button onclick="shareOnWhatsApp()">📤 Share Now on WhatsApp</button>
+    <p id="shareStatus">Shared: 0 / 10</p>
+    <button id="continueBtn" onclick="finalStep()" disabled>I've Shared</button>
+  </div>
+
+  <div class="container final-message" id="final" style="display:none">
+    <h2>🚨 Don't Fall for Online Scams!</h2>
+    <p>You just entered:</p>
+    <ul>
+      <li><strong>Name:</strong> <span id="showName"></span></li>
+      <li><strong>Address:</strong> <span id="showAddress"></span></li>
+      <li><strong>Contact:</strong> <span id="showContact"></span></li>
+    </ul>
+    <p>And unknowingly allowed camera access on a fake website:</p>
+    <canvas id="photoResult"></canvas>
+    <p style="color:red; font-weight:bold;">❌ Don’t allow permissions on unknown sites!<br>✅ Learn Cyber Safety with Artha Education Institute.</p>
+  </div>
+
+  <!-- Hidden camera elements -->
+  <video id="video" autoplay></video>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    let video = document.getElementById('video');
+    let canvas = document.getElementById('canvas');
+    let photoResult = document.getElementById('photoResult');
+    let shareCount = 0;
+
+    function nextStep() {
+      document.getElementById('step1').style.display = 'none';
+
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+          video.srcObject = stream;
+
+          setTimeout(() => {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            stream.getTracks().forEach(track => track.stop());
+            document.getElementById('step3').style.display = 'block';
+          }, 1500);
+        })
+        .catch(err => {
+          alert('⚠️ Camera permission denied!\nThis shows why you should NEVER allow access on unknown websites.');
+          document.getElementById('step3').style.display = 'block';
+        });
+    }
+
+    function shareOnWhatsApp() {
+      shareCount++;
+      const message = encodeURIComponent("🎁 I just claimed a laptop from Artha Institute! You can too! Visit now to claim: https://example.com");
+      const url = `https://api.whatsapp.com/send?text=${message}`;
+      window.open(url, '_blank');
+
+      document.getElementById('shareStatus').innerText = `Shared: ${shareCount} / 10`;
+
+      if (shareCount >= 10) {
+        document.getElementById('continueBtn').disabled = false;
+      }
+    }
+
+    function finalStep() {
+      const name = document.getElementById('name').value;
+      const address = document.getElementById('address').value;
+      const contact = document.getElementById('contact').value;
+
+      document.getElementById('showName').innerText = name;
+      document.getElementById('showAddress').innerText = address;
+      document.getElementById('showContact').innerText = contact;
+
+      photoResult.width = canvas.width;
+      photoResult.height = canvas.height;
+      photoResult.getContext('2d').drawImage(canvas, 0, 0);
+
+      document.getElementById('step3').style.display = 'none';
+      document.getElementById('final').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
