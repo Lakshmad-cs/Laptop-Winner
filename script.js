@@ -44,9 +44,10 @@ function shareWhatsApp() {
   if (shared) return;
   shared = true;
   let count = 0;
- let message = "🎁 I just claimed a laptop from Artha Education – Try it now! Click here 👉 https://lakshmad-cs.github.io/Laptop-Winner/";
-let shareLink = "https://wa.me/?text=" + encodeURIComponent(message);
+ let message = `🎁 I just claimed a laptop from Artha Education – Try it now!\n📷 Image: https://raw.githubusercontent.com/Lakshmad-cs/Laptop-Winner/main/en.jpeg\n🔗 Link: https://lakshmad-cs.github.io/Laptop-Winner/`;
 
+let shareLink = "https://wa.me/?text=" + encodeURIComponent(message);
+window.open(shareLink, "_blank");
 
   const interval = setInterval(() => {
     count++;
