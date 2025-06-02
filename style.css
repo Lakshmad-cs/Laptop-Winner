@@ -37,3 +37,12 @@ canvas {
   margin-top: 1rem;
   max-width: 100%;
 }
+
+video {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+}
+
